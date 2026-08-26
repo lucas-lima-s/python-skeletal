@@ -1,0 +1,55 @@
+_min_copier_version: "9.0.0"
+_exclude:
+  - ".git"
+  - ".venv"
+  - "__pycache__"
+  - "*.pyc"
+  - ".ruff_cache"
+  - ".mypy_cache"
+  - ".pytest_cache"
+  - "copier.yml"
+  - "uv.lock"
+_tasks:
+  - command:
+      - python
+      - scripts/rename_project.py
+      - --project-name
+      - "{{ project_name }}"
+      - --package-name
+      - "{{ package_name }}"
+      - --project-description
+      - "{{ project_description }}"
+      - --author-name
+      - "{{ author_name }}"
+      - --author-email
+      - "{{ author_email }}"
+      - --github-user
+      - "{{ github_user }}"
+      - --python-min
+      - "{{ python_min }}"
+      - --apply
+
+project_name:
+  type: str
+  help: "Distribution name (kebab-case)"
+
+package_name:
+  type: str
+  default: "{{ project_name | replace('-', '_') }}"
+
+project_description:
+  type: str
+
+author_name:
+  type: str
+
+author_email:
+  type: str
+
+github_user:
+  type: str
+
+python_min:
+  type: str
+  default: "3.11"
+  choices: ["3.11", "3.12", "3.13", "3.14"]
