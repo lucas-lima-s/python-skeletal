@@ -1,0 +1,83 @@
+[build-system]
+requires = ["hatchling>=1.32"]
+build-backend = "hatchling.build"
+
+[project]
+name = "python-skeletal"
+version = "0.1.0"
+description = "Modern Python project template: uv, ruff, mypy strict, pytest, pre-commit, multi-OS CI, Docker."
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "Lucas de Lima", email = "106186397+lucas-lima-s@users.noreply.github.com" }]
+keywords = ["template", "scaffold", "uv", "ruff", "pytest"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Developers",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+  "Typing :: Typed",
+]
+dependencies = ["pydantic-settings>=2.15,<3"]
+
+[project.scripts]
+skeletal = "skeletal.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/lucas-lima-s/python-skeletal"
+Repository = "https://github.com/lucas-lima-s/python-skeletal"
+Issues = "https://github.com/lucas-lima-s/python-skeletal/issues"
+
+[dependency-groups]
+dev = [
+  "mypy>=2.3.1",
+  "pre-commit>=4.6.2",
+  "pytest>=9.1.1",
+  "pytest-cov>=7.1.0",
+  "ruff>=0.16.4",
+  "pyyaml>=6.0.2",
+  "copier>=9.17.2",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/skeletal"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+src = ["src", "tests", "scripts"]
+extend-exclude = ["docs"]
+
+[tool.ruff.lint]
+select = ["A", "ANN", "ARG", "B", "C4", "E", "F", "I", "N", "PL", "PTH", "RUF", "SIM", "T20", "TID", "UP", "W"]
+ignore = ["ANN401"]
+
+[tool.ruff.lint.per-file-ignores]
+"src/skeletal/cli.py" = ["T20"]
+"scripts/rename_project.py" = ["T20"]
+"tests/**" = ["ANN", "PLR2004", "ARG"]
+
+[tool.ruff.format]
+docstring-code-format = true
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+files = ["src", "tests", "scripts"]
+warn_unreachable = true
+enable_error_code = ["ignore-without-code", "redundant-expr", "truthy-bool"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra --strict-markers --strict-config --cov=skeletal --cov-report=term-missing --cov-report=xml --cov-fail-under=90"
+filterwarnings = ["error"]
+
+[tool.coverage.run]
+source = ["src"]
+branch = true
+
+[tool.coverage.report]
+exclude_lines = ["pragma: no cover", "if TYPE_CHECKING:", 'if __name__ == "__main__":']
